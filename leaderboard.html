@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Peringkat</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL STYLE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            background: linear-gradient(135deg, #020024 0%, #090979 35%, #00d4ff 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- HEADER --- */
+        .header-title {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease;
+        }
+        .header-title h1 {
+            font-size: 2.5rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+        }
+        .header-title p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* --- CONTAINER UTAMA --- */
+        .leaderboard-card {
+            background: rgba(255, 255, 255, 0.1); /* Glassmorphism */
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        /* --- LIST ITEM (BARIS SISWA) --- */
+        .rank-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            color: #333;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0; /* Untuk animasi muncul */
+        }
+
+        .rank-item:hover {
+            transform: scale(1.02);
+        }
+
+        /* Nomor Urut */
+        .rank-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 40px;
+            color: #7f8c8d;
+        }
+
+        /* Nama Siswa */
+        .rank-name {
+            flex: 1; /* Mengisi ruang kosong */
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Nilai */
+        .rank-score {
+            font-weight: 700;
+            color: #090979;
+            background: #e3f2fd;
+            padding: 5px 15px;
+            border-radius: 50px;
+        }
+
+        /* --- DESAIN KHUSUS TOP 3 --- */
+        /* Juara 1 */
+        .rank-item:nth-child(1) {
+            background: linear-gradient(to right, #fff, #fffde7);
+            border: 2px solid #ffd700;
+            transform: scale(1.05);
+            margin-bottom: 20px;
+        }
+        .rank-item:nth-child(1) .rank-number {
+            color: #f1c40f; /* Warna Emas */
+            font-size: 1.5rem;
+        }
+        .rank-item:nth-child(1)::before {
+            content: '👑';
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        /* Juara 2 */
+        .rank-item:nth-child(2) .rank-number { color: #95a5a6; } /* Perak */
+        /* Juara 3 */
+        .rank-item:nth-child(3) .rank-number { color: #cd7f32; } /* Perunggu */
+
+        /* --- TOMBOL KEMBALI --- */
+        .btn-back {
+            display: inline-block;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background: white;
+            color: #090979;
+        }
+
+        /* --- ANIMASI --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Loading State */
+        .loading-text {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-title">
+        <h1>🏆 Hall of Fame</h1>
+        <p>Siswa Terbaik dengan Nilai Tertinggi</p>
+    </div>
+
+    <div class="leaderboard-card">
+        <ul class="rank-list" id="leaderboardList">
+            <li class="loading-text">⏳ Sedang memuat data juara...</li>
+        </ul>
+    </div>
+
+    <a href="Utama.html" class="btn-back">← Kembali ke Menu Utama</a>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- 🔥🔥 PASTE CONFIG FIREBASE KAMU DISINI (JANGAN SAMPAI TYPO) 🔥🔥 ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvlai-CR39S_Z2s4rUhJcVX2Di3IgDZYg",
+            authDomain: "websmk-saya.firebaseapp.com",
+            projectId: "websmk-saya",
+            storageBucket: "websmk-saya.firebasestorage.app",
+            messagingSenderId: "89778838386",
+            appId: "1:89778838386:web:6339ca30d13bc57aa05beb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadLeaderboard() {
+            const listContainer = document.getElementById('leaderboardList');
+            
+            // Ambil 10 data tertinggi
+            const q = query(collection(db, "leaderboard"), orderBy("nilai", "desc"), limit(10));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    listContainer.innerHTML = "<li class='loading-text'>Belum ada data. Jadilah yang pertama!</li>";
+                    return;
+                }
+
+                listContainer.innerHTML = ""; // Bersihkan loading
+                let nomor = 1;
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    
+                    // Efek Delay Animasi (Staggered)
+                    let delay = nomor * 0.1; 
+
+                    let item = `
+                        <li class="rank-item" style="animation-delay: ${delay}s">
+                            <div class="rank-number">#${nomor}</div>
+                            <div class="rank-name">${data.nama}</div>
+                            <div class="rank-score">${data.nilai}</div>
+                        </li>
+                    `;
+                    listContainer.innerHTML += item;
+                    nomor++;
+                });
+
+            } catch (e) {
+                console.error("Error:", e);
+                listContainer.innerHTML = `<li class="loading-text" style="color:#ff4b2b">Gagal memuat data.<br>${e.message}</li>`;
+            }
+        }
+
+        loadLeaderboard();
+    </script>
+
+</body>
+</html>
