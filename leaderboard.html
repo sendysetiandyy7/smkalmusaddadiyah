@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- GLOBAL STYLE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body {
@@ -22,7 +21,6 @@
             padding: 20px;
         }
 
-        /* --- HEADER --- */
         .header-title {
             text-align: center;
             margin-bottom: 30px;
@@ -38,9 +36,8 @@
             color: rgba(255,255,255,0.8);
         }
 
-        /* --- CONTAINER UTAMA --- */
         .leaderboard-card {
-            background: rgba(255, 255, 255, 0.1); /* Glassmorphism */
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             width: 100%;
@@ -50,7 +47,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        /* --- LIST ITEM (BARIS SISWA) --- */
         .rank-list {
             list-style: none;
             padding: 0;
@@ -67,14 +63,13 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: transform 0.2s;
             animation: slideIn 0.5s ease forwards;
-            opacity: 0; /* Untuk animasi muncul */
+            opacity: 0;
         }
 
         .rank-item:hover {
             transform: scale(1.02);
         }
 
-        /* Nomor Urut */
         .rank-number {
             font-size: 1.2rem;
             font-weight: 700;
@@ -82,14 +77,12 @@
             color: #7f8c8d;
         }
 
-        /* Nama Siswa */
         .rank-name {
-            flex: 1; /* Mengisi ruang kosong */
+            flex: 1;
             font-weight: 600;
             font-size: 1.1rem;
         }
 
-        /* Nilai */
         .rank-score {
             font-weight: 700;
             color: #090979;
@@ -98,8 +91,6 @@
             border-radius: 50px;
         }
 
-        /* --- DESAIN KHUSUS TOP 3 --- */
-        /* Juara 1 */
         .rank-item:nth-child(1) {
             background: linear-gradient(to right, #fff, #fffde7);
             border: 2px solid #ffd700;
@@ -107,7 +98,7 @@
             margin-bottom: 20px;
         }
         .rank-item:nth-child(1) .rank-number {
-            color: #f1c40f; /* Warna Emas */
+            color: #f1c40f;
             font-size: 1.5rem;
         }
         .rank-item:nth-child(1)::before {
@@ -116,12 +107,9 @@
             font-size: 1.5rem;
         }
 
-        /* Juara 2 */
-        .rank-item:nth-child(2) .rank-number { color: #95a5a6; } /* Perak */
-        /* Juara 3 */
-        .rank-item:nth-child(3) .rank-number { color: #cd7f32; } /* Perunggu */
+        .rank-item:nth-child(2) .rank-number { color: #95a5a6; }
+        .rank-item:nth-child(3) .rank-number { color: #cd7f32; }
 
-        /* --- TOMBOL KEMBALI --- */
         .btn-back {
             display: inline-block;
             margin-top: 30px;
@@ -138,7 +126,6 @@
             color: #090979;
         }
 
-        /* --- ANIMASI --- */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -149,14 +136,12 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* Loading State */
         .loading-text {
             text-align: center;
             color: white;
             padding: 20px;
             font-style: italic;
         }
-
     </style>
 </head>
 <body>
@@ -172,14 +157,13 @@
         </ul>
     </div>
 
-    <a href="Utama.html" class="btn-back">← Kembali ke Menu Utama</a>
+    <a href="menu.html" class="btn-back">← Kembali ke Menu Utama</a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, query, orderBy, limit, getDocs } 
         from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- 🔥🔥 PASTE CONFIG FIREBASE KAMU DISINI (JANGAN SAMPAI TYPO) 🔥🔥 ---
         const firebaseConfig = {
             apiKey: "AIzaSyCvlai-CR39S_Z2s4rUhJcVX2Di3IgDZYg",
             authDomain: "websmk-saya.firebaseapp.com",
@@ -195,7 +179,6 @@
         async function loadLeaderboard() {
             const listContainer = document.getElementById('leaderboardList');
             
-            // Ambil 10 data tertinggi
             const q = query(collection(db, "leaderboard"), orderBy("nilai", "desc"), limit(10));
             
             try {
@@ -206,13 +189,11 @@
                     return;
                 }
 
-                listContainer.innerHTML = ""; // Bersihkan loading
+                listContainer.innerHTML = ""; 
                 let nomor = 1;
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    
-                    // Efek Delay Animasi (Staggered)
                     let delay = nomor * 0.1; 
 
                     let item = `
