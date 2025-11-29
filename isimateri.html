@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materi Belajar</title>
+    <title>Materi Belajar - Dampak Sosial</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-   { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
             background: linear-gradient(135deg, #020024 0%, #090979 35%, #00d4ff 100%);
             min-height: 100vh;
@@ -18,6 +25,7 @@
             padding-bottom: 50px;
         }
 
+       
         nav {
             width: 100%;
             padding: 20px 30px;
@@ -29,6 +37,7 @@
             display: flex;
             align-items: center;
         }
+
         .logo {
             font-weight: 700;
             font-size: 1.2rem;
@@ -36,6 +45,7 @@
             text-decoration: none;
         }
 
+       
         .content-container {
             background-color: rgba(255, 255, 255, 0.95);
             width: 90%;
@@ -48,11 +58,13 @@
             color: #333;
         }
 
+       
         .materi-header {
             border-bottom: 2px solid #eee;
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
+
         .category-badge {
             background: #e3f2fd;
             color: #090979;
@@ -62,51 +74,92 @@
             font-weight: 600;
             text-transform: uppercase;
         }
+
         h1 {
             margin-top: 10px;
             color: #090979;
-            font-size: 1.8rem;
+            font-size: 1.8rem; /* Ukuran disesuaikan agar tidak terlalu besar */
+            line-height: 1.3;
         }
 
+        
         .materi-image {
             width: 100%;
-            /* Tinggi diatur otomatis agar gambar tidak gepeng */
-            height: auto; 
-            /* Maksimal tinggi agar tidak terlalu besar di layar lebar */
-            max-height: 350px; 
+            height: 250px;
+            background-color: #ddd;
             border-radius: 15px;
-            margin-bottom: 30px;
-            overflow: hidden;
+            margin-bottom: 25px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            background-color: #f0f8ff; /* Latar belakang biru muda */
-            padding: 20px; /* Memberi jarak di sekitar gambar */
+            color: #777;
+            font-weight: 600;
+            overflow: hidden;
         }
-        
+
         .materi-image img {
             width: 100%;
             height: 100%;
-            /* 'contain' agar gambar utuh terlihat semua di dalam kotak */
-            object-fit: contain; 
+            object-fit: cover;
         }
 
-        .materi-body { color: #444; line-height: 1.8; font-size: 1rem; }
-        .materi-body h3 { color: #090979; margin-top: 25px; margin-bottom: 10px; font-size: 1.3rem; font-weight: 700; }
-        .materi-body p { margin-bottom: 15px; text-align: justify; }
-        .materi-body ul, .materi-body ol { margin-left: 20px; margin-bottom: 20px; }
-        .materi-body li { margin-bottom: 8px; }
-        .materi-body strong { color: #000; }
+        
+        .materi-body {
+            color: #444;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+     
+        .materi-body h3 {
+            color: #090979;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-left: 4px solid #00d4ff;
+            padding-left: 10px;
+        }
+
+        .materi-body p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+   
+        .materi-body ol, .materi-body ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+        }
+
+        .materi-body li {
+            margin-bottom: 10px;
+        }
+
+
+        .materi-body li ul {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .materi-body strong {
+            color: #000;
+        }
+
+      
         .highlight-box {
-            background: #fff8e1;
-            border-left: 5px solid #ff9800;
+            background: #e8f5e9; /* Hijau muda */
+            border-left: 5px solid #4caf50;
             padding: 15px;
             margin: 25px 0;
             border-radius: 5px;
             font-style: italic;
-            color: #555;
+            color: #2e7d32;
         }
 
-        /* --- TOMBOL NAVIGASI --- */
+      
         .nav-buttons {
             display: flex;
             justify-content: space-between;
@@ -114,6 +167,7 @@
             border-top: 2px solid #eee;
             padding-top: 20px;
         }
+
         .btn {
             text-decoration: none;
             padding: 12px 25px;
@@ -123,39 +177,55 @@
             display: inline-flex;
             align-items: center;
         }
-        .btn-prev { background: white; border: 1px solid #ddd; color: #666; }
+
+        .btn-prev {
+            background: white;
+            border: 1px solid #ddd;
+            color: #666;
+        }
         .btn-prev:hover { background: #f0f0f0; color: #333; }
+
+        .btn-next {
+            background: #090979;
+            color: white;
+            box-shadow: 0 4px 15px rgba(9, 9, 121, 0.3);
+        }
+        .btn-next:hover {
+            background: #00d4ff;
+            transform: translateY(-2px);
+        }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+       
         @media (max-width: 600px) {
             .content-container { padding: 25px; width: 95%; }
             h1 { font-size: 1.4rem; }
-            /* Di HP gambar lebih kecil */
-            .materi-image { max-height: 200px; padding: 10px; } 
+            .materi-image { height: 180px; }
             .nav-buttons { flex-direction: column-reverse; gap: 10px; }
             .btn { width: 100%; justify-content: center; }
         }
+
     </style>
 </head>
 <body>
 
     <nav>
-        <a class="logo">E-Learning SMK</a>
+        <a href="index.html" class="logo">E-Learning SMK</a>
     </nav>
 
     <div class="content-container">
         
         <div class="materi-header">
-            <span class="category-badge">Materi Utama</span>
+            <span class="category-badge">Pertemuan 1</span>
             <h1>Dampak Sosial Informatika dalam Kehidupan Sehari-hari</h1>
         </div>
 
         <div class="materi-image">
-            <img src="dampak.jpeg" alt="Ilustrasi Dampak Sosial Informatika">
+            <span>Ilustrasi Dampak Sosial Informatika</span>
         </div>
 
         <div class="materi-body">
