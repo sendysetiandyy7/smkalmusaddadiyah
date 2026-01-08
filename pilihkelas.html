@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Belajar</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL STYLE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #020024 0%, #090979 35%, #00d4ff 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: 1px; color: white; text-decoration: none; }
+        
+        .logout-btn {
+            font-size: 0.9rem; color: rgba(255,255,255,0.7); 
+            text-decoration: none; cursor: pointer; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        /* --- KONTEN UTAMA --- */
+        .main-content {
+            flex: 1; padding: 40px 20px;
+            max-width: 1000px; margin: 0 auto; width: 100%;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .dashboard-header { text-align: center; margin-bottom: 40px; }
+        .dashboard-header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 5px; }
+        .dashboard-header p { color: #ccc; font-size: 1rem; }
+        .highlight-name { color: #00d4ff; }
+
+        /* --- STYLE KARTU SELEKSI --- */
+        .section-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 25px; margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card-label {
+            font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;
+            color: #00d4ff; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+        }
+
+        .options-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: flex-start; }
+
+        /* ITEM BOX (Tombol Pilihan) */
+        .option-box {
+            flex: 1; min-width: 140px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px; padding: 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; text-align: center; gap: 5px;
+        }
+
+        .option-box:not(.locked):hover {
+            background: rgba(255,255,255,0.15); border-color: #00d4ff;
+        }
+
+        .option-box.active {
+            background: white; color: #090979;
+            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+            border: 2px solid #00d4ff; transform: scale(1.05);
+        }
+
+        .option-box.locked {
+            opacity: 0.4; cursor: not-allowed; filter: grayscale(100%); background: rgba(0,0,0,0.3); border-color: transparent;
+        }
+        .option-box.locked i { color: #888; }
+
+        .option-box i { font-size: 1.5rem; color: #00d4ff; margin-bottom: 5px; }
+        .option-box.active i { color: #090979; }
+        .option-box span { font-weight: 600; font-size: 1rem; }
+        .option-box small { font-size: 0.75rem; opacity: 0.8; }
+
+        /* TOMBOL MULAI */
+        .btn-start {
+            display: block; width: 100%; max-width: 300px; margin: 40px auto 20px;
+            padding: 15px; border-radius: 50px;
+            background: linear-gradient(90deg, #090979, #00d4ff);
+            color: white; font-weight: 700; font-size: 1.1rem;
+            text-align: center; text-decoration: none; border: none; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4); transition: 0.3s;
+        }
+        .btn-start:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(0, 212, 255, 0.6); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .dashboard-header h1 { font-size: 1.8rem; }
+            .option-box { min-width: 45%; }
+            nav { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fas fa-graduation-cap"></i> E-Learning</div>
+        
+    </nav>
+
+    <main class="main-content">
+        
+        <div class="dashboard-header">
+            <h1 id="sapaanHeader">Halo, <span class="highlight-name">Siswa</span>! 👋</h1>
+            <p>Silakan pilih materi belajarmu hari ini.</p>
+        </div>
+
+        <div class="section-card" id="card-kelas">
+            <div class="card-label"><i class="fas fa-school"></i> 1. Pilih Kelas</div>
+            <div class="options-grid">
+                <div class="option-box" onclick="selectItem(this, 'kelas', 'X')">
+                    <span>X</span><small>Kelas 10</small>
+                </div>
+                <div class="option-box locked">
+                    <span>XI</span><small>Kelas 11</small> <i class="fas fa-lock" style="font-size:0.8rem; margin-left:5px"></i>
+                </div>
+                <div class="option-box locked">
+                    <span>XII</span><small>Kelas 12</small> <i class="fas fa-lock" style="font-size:0.8rem; margin-left:5px"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="card-semester">
+            <div class="card-label"><i class="fas fa-calendar-alt"></i> 2. Pilih Semester</div>
+            <div class="options-grid">
+                <div class="option-box" onclick="selectItem(this, 'semester', '1')">
+                    <span>1</span><small>Ganjil</small>
+                </div>
+                <div class="option-box locked">
+                    <span>2</span><small>Genap</small> <i class="fas fa-lock" style="font-size:0.8rem; margin-left:5px"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card" id="card-mapel">
+            <div class="card-label"><i class="fas fa-book"></i> 3. Pilih Mata Pelajaran</div>
+            <div class="options-grid">
+                <div class="option-box" onclick="selectItem(this, 'mapel', 'Informatika')">
+                    <i class="fas fa-laptop-code"></i><span>Informatika</span>
+                </div>
+                <div class="option-box locked"><i class="fas fa-language"></i><span>B. Indo</span></div>
+                <div class="option-box locked"><i class="fas fa-calculator"></i><span>Matematika</span></div>
+                <div class="option-box locked"><i class="fas fa-flask"></i><span>IPAS</span></div>
+            </div>
+        </div>
+
+        <div class="section-card" id="card-pertemuan">
+            <div class="card-label"><i class="fas fa-clock"></i> 4. Pilih Pertemuan</div>
+            <div class="options-grid">
+                <div class="option-box" onclick="selectItem(this, 'pertemuan', '1')">
+                    <i class="fas fa-play-circle"></i><span>Pertemuan 1</span>
+                </div>
+                <div class="option-box locked"><span>Pertemuan 2</span> <i class="fas fa-lock" style="font-size:0.7rem"></i></div>
+                <div class="option-box locked"><span>Pertemuan 3</span> <i class="fas fa-lock" style="font-size:0.7rem"></i></div>
+                <div class="option-box locked"><span>Pertemuan 4</span> <i class="fas fa-lock" style="font-size:0.7rem"></i></div>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="mulaiBelajar()">Mulai Belajar <i class="fas fa-arrow-right"></i></button>
+
+    </main>
+
+    <script>
+        // --- 1. LOGIKA SAPAAN WAKTU REALTIME ---
+        function updateGreeting() {
+            const date = new Date();
+            const hour = date.getHours();
+            let greeting = "Selamat Pagi";
+
+            if (hour >= 4 && hour < 11) greeting = "Selamat Pagi";
+            else if (hour >= 11 && hour < 15) greeting = "Selamat Siang";
+            else if (hour >= 15 && hour < 18) greeting = "Selamat Sore";
+            else greeting = "Selamat Malam";
+
+            // Ambil nama dari penyimpanan, default "Sang Juara" jika kosong
+            const storedName = localStorage.getItem('namaSiswa') || 'Sang Juara';
+            
+            // Update teks di HTML
+            const headerElement = document.getElementById('sapaanHeader');
+            headerElement.innerHTML = `${greeting}, <span class="highlight-name">${storedName}</span>! 👋`;
+        }
+
+        // Jalankan fungsi saat halaman dimuat
+        updateGreeting();
+
+
+        // --- 2. LOGIKA SELEKSI KELAS (Sama seperti sebelumnya) ---
+        let selections = { kelas: null, semester: null, mapel: null, pertemuan: null };
+
+        function selectItem(element, category, value) {
+            if (element.classList.contains('locked')) return;
+
+            let siblings = element.parentElement.children;
+            for (let i = 0; i < siblings.length; i++) {
+                siblings[i].classList.remove('active');
+            }
+            element.classList.add('active');
+            selections[category] = value;
+        }
+
+        function mulaiBelajar() {
+            if (!selections.kelas) { alert("Harap pilih KELAS terlebih dahulu!"); window.location.hash = "#card-kelas"; return; }
+            if (!selections.semester) { alert("Harap pilih SEMESTER terlebih dahulu!"); window.location.hash = "#card-semester"; return; }
+            if (!selections.mapel) { alert("Harap pilih MATA PELAJARAN terlebih dahulu!"); window.location.hash = "#card-mapel"; return; }
+            if (!selections.pertemuan) { alert("Harap pilih PERTEMUAN terlebih dahulu!"); window.location.hash = "#card-pertemuan"; return; }
+
+            window.location.href = "isi.html"; 
+        }
+
+        function logout() {
+            if(confirm("Yakin ingin keluar?")) window.location.href = "login-firebase.html";
+        }
+    </script>
+
+</body>
+</html>

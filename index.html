@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Selamat Datang</title>
+    <title>Selamat Datang - SMK Ciledug Al-Musaddadiyah</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,173 +13,152 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
-            background: linear-gradient(135deg, #020024 0%, #090979 35%, #00d4ff 100%);
+            background: linear-gradient(120deg, #0f2027, #203a43, #2c5364, #005bea);
+            background-size: 200% 200%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* justify-content: center;  <-- Dihapus biar bisa scroll kalau konten banyak */
+            display: flex; flex-direction: column; align-items: center;
             padding: 40px 20px;
             color: white;
             overflow-x: hidden;
         }
 
-        /* --- LOGO SEKOLAH --- */
-        .school-logo {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            animation: float 3s ease-in-out infinite;
+        @keyframes gradientBG { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
         }
         
-        .school-logo img {
-            width: 80%; /* Kalau ada gambar logo asli, pakai tag img */
-            height: auto;
-        }
+        /* --- WELCOME HERO --- */
+        .welcome-container { text-align: center; animation: fadeIn 1.5s ease; margin-bottom: 30px; max-width: 800px; }
+        .school-logo { width: 100px; height: 100px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; font-size: 40px; border: 2px solid rgba(255, 255, 255, 0.3); animation: float 3s ease-in-out infinite; backdrop-filter: blur(5px); }
+        h1 { font-size: 2.5rem; font-weight: 700; line-height: 1.2; text-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-bottom: 10px; }
+        .subtitle { font-size: 1.1rem; font-weight: 300; color: #e0e0e0; margin-bottom: 10px; }
 
-        /* --- JUDUL UTAMA --- */
-        .welcome-container {
-            text-align: center;
-            animation: fadeIn 1.5s ease;
-            margin-bottom: 50px;
-            max-width: 800px;
-        }
+        /* --- FEATURES GRID --- */
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; max-width: 900px; margin: 20px 0 50px 0; animation: slideUp 1s ease 0.5s backwards; }
+        .feature-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 25px; border-radius: 20px; text-align: center; transition: 0.3s; }
+        .feature-card:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-5px); }
+        .feature-icon { font-size: 2.5rem; margin-bottom: 15px; color: #00d4ff; }
+        .feature-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 5px; }
+        .feature-desc { font-size: 0.85rem; color: #ccc; }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            line-height: 1.2;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+        /* --- CONTENT BOX (Panduan & Profil) --- */
+        .content-box { width: 100%; max-width: 900px; margin-bottom: 40px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; animation: slideUp 1s ease 0.7s backwards; backdrop-filter: blur(10px); }
+        .section-title { text-align: center; font-size: 1.8rem; margin-bottom: 30px; color: #ff9800; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; letter-spacing: 1px; }
         
-        .subtitle {
-            font-size: 1.2rem;
-            font-weight: 300;
-            color: #e0e0e0;
-            margin-top: 10px;
-            margin-bottom: 40px;
-        }
+        /* Guide List Style */
+        .guide-list { list-style: none; }
+        .guide-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .guide-number { background: #00d4ff; color: #090979; min-width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px; }
+        .guide-content h4 { font-size: 1rem; margin-bottom: 5px; font-weight: 600; }
+        .guide-content p { color: #ddd; font-size: 0.9rem; line-height: 1.6; }
+        .guide-link { color: #ff9800; text-decoration: none; border-bottom: 1px dashed #ff9800; }
 
-        /* --- TOMBOL UTAMA --- */
-        .btn-start {
-            display: inline-block;
-            padding: 18px 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            background: linear-gradient(45deg, #ff9800, #ff5722);
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(255, 87, 34, 0.4);
-            transition: all 0.3s ease;
-        }
+        /* History & Visi Misi Style */
+        .history-text { text-align: justify; line-height: 1.8; color: #eee; margin-bottom: 30px; }
+        .visi-box { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .visi-main { font-size: 1.1rem; font-weight: 700; color: #00d4ff; font-style: italic; margin-bottom: 20px; line-height: 1.5; }
+        
+        .list-style { list-style: none; padding-left: 0; text-align: left; }
+        .list-style li { position: relative; padding-left: 25px; margin-bottom: 10px; color: #ddd; line-height: 1.6; }
+        .list-style li::before { content: '➢'; position: absolute; left: 0; color: #ff9800; }
+        h3.sub-title { color: #00d4ff; margin-bottom: 15px; margin-top: 20px; font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: inline-block; }
 
-        .btn-start:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 87, 34, 0.6);
-        }
+        /* Button & Footer */
+        .cta-container { margin: 20px 0 40px 0; text-align: center; animation: slideUp 1s ease 1s backwards; }
+        .btn-start { display: inline-block; padding: 18px 60px; font-size: 1.3rem; font-weight: 700; color: white; background: linear-gradient(45deg, #ff9800, #ff5722); text-decoration: none; border-radius: 50px; box-shadow: 0 10px 30px rgba(255, 87, 34, 0.5); transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.2); }
+        .btn-start:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 20px 40px rgba(255, 87, 34, 0.7); }
+        footer { margin-top: auto; padding-top: 20px; font-size: 0.8rem; color: rgba(255,255,255,0.5); text-align: center; }
 
-        /* --- FITUR CARDS (YANG BARU) --- */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 Kolom */
-            gap: 20px;
-            width: 100%;
-            max-width: 900px;
-            margin-top: 20px;
-            animation: slideUp 1s ease 0.5s backwards; /* Muncul belakangan */
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 25px;
-            border-radius: 20px;
-            text-align: center;
-            transition: 0.3s;
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #00d4ff;
-        }
-
-        .feature-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        .feature-desc {
-            font-size: 0.85rem;
-            color: #ccc;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            margin-top: auto;
-            padding-top: 50px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* ANIMASI */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* RESPONSIF HP */
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .features-grid { grid-template-columns: 1fr; /* Jadi 1 kolom di HP */ }
-            .school-logo { width: 80px; height: 80px; font-size: 30px; }
+        
+        /* Responsive */
+        @media (max-width: 768px) { 
+            h1 { font-size: 1.8rem; } 
+            .features-grid { grid-template-columns: 1fr; } 
+            .content-box { padding: 25px; } 
+            .btn-start { width: 100%; text-align: center; padding: 15px; font-size: 1.1rem; } 
         }
     </style>
 </head>
 <body>
 
     <div class="welcome-container">
-        <div class="school-logo">
-            <i class="fas fa-graduation-cap"></i> 
-            </div>
-
-        <h1>E-LEARNING<br>SMK AL-MUSADDADIYAH</h1>
+        <div class="school-logo"><i class="fas fa-graduation-cap"></i></div>
+        <h1>E-LEARNING<br>SMK CILEDUG AL-MUSADDADIYAH</h1>
         <p class="subtitle">Platform Pembelajaran Interaktif & Modern</p>
-
-        <a href="login-firebase.html" class="btn-start">Mulai Belajar Sekarang 🚀</a>
     </div>
 
     <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-book-open"></i></div>
-            <div class="feature-title">Materi Lengkap</div>
-            <div class="feature-desc">Pelajari modul dampak sosial informatika dengan mudah.</div>
+        <div class="feature-card"><div class="feature-icon"><i class="fas fa-book-open"></i></div><div class="feature-title">Materi Lengkap</div><div class="feature-desc">Pelajari modul dampak sosial informatika dengan mudah.</div></div>
+        <div class="feature-card"><div class="feature-icon"><i class="fas fa-play-circle"></i></div><div class="feature-title">Video Interaktif</div><div class="feature-desc">Tonton video pembelajaran agar lebih paham.</div></div>
+        <div class="feature-card"><div class="feature-icon"><i class="fas fa-trophy"></i></div><div class="feature-title">Quiz & Peringkat</div><div class="feature-desc">Uji kemampuanmu dan raih peringkat tertinggi!</div></div>
+    </div>
+
+    <div class="content-box">
+        <h2 class="section-title">Panduan Penggunaan</h2>
+        <ul class="guide-list">
+            <li class="guide-item"><div class="guide-number">1</div><div class="guide-content"><h4>Akses Website</h4><p>Masuk melalui tautan: <a href="#" class="guide-link">websmk/index.html</a></p></div></li>
+            <li class="guide-item"><div class="guide-number">2</div><div class="guide-content"><h4>Pilih Kelas</h4><p>Pilih kelas sesuai jenjang pendidikan Anda.</p></div></li>
+            <li class="guide-item"><div class="guide-number">3</div><div class="guide-content"><h4>Login / Daftar</h4><p>Login menggunakan akun terdaftar atau buat akun baru.</p></div></li>
+            <li class="guide-item"><div class="guide-number">4</div><div class="guide-content"><h4>Mulai Belajar</h4><p>Akses materi, video, dan kuis secara berurutan.</p></div></li>
+        </ul>
+    </div>
+
+    <div class="content-box">
+        <h2 class="section-title">Profil Sekolah</h2>
+        
+        <h3 class="sub-title"><i class="fas fa-history"></i> Sejarah Singkat</h3>
+        <div class="history-text">
+            <p>
+                SMK Ciledug Al-Musadaddiyah didirikan pada tahun 1996. Sejak berdirinya sampai sekarang, sekolah ini banyak mengalami perubahan dan kemajuan yang signifikan.
+            </p>
+            <br>
+            <p>
+                SMK Ciledug Al-Musadaddiyah beralamat di Jl. Mayor Syamsu no. 2 Garut. Sekolah ini didirikan dengan alasan untuk memenuhi kebutuhan para siswa untuk mempunyai keahlian. Pemilik yayasan melihat peluang besar untuk mendirikan SMK di daerah Tarogong Kidul, tepatnya di Jl. Mayor Syamsu No. 2, dengan alasan minimnya SMK yang memberikan fasilitas dan kualitas yang baik untuk para siswa yang membutuhkan dan menyalurkan keahliannya.
+            </p>
+            <br>
+            <p>
+                SMK Ciledug Al Musaddadiyah Garut diselenggarakan mulai tahun 1996 berdasarkan Surat Keputusan dari Kepala Kantor Wilayah Departemen Pendidikan dan Kebudayaan Provinsi Jawa Barat No. 513/I02.2/KEP/OT/96 tanggal 5 Juli 1996 dan bernaung di bawah Yayasan Al-Musaddadiyah. Pada saat ini SMK Ciledug Al Musaddadiyah Garut menyelenggarakan empat jurusan/program kompetensi, yaitu Administrasi Perkantoran, Pemasaran, Akuntansi, dan Multimedia (pengembangan dari Jurusan Teknik Informatika).
+            </p>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-play-circle"></i></div>
-            <div class="feature-title">Video Interaktif</div>
-            <div class="feature-desc">Tonton video pembelajaran agar lebih paham.</div>
+
+        <h3 class="sub-title"><i class="fas fa-bullseye"></i> Visi & Misi</h3>
+        
+        <div class="visi-box">
+            <h4>VISI</h4>
+            <p class="visi-main">“Terselenggaranya Layanan Pendidikan yang Prima Untuk Membentuk Siswa Cerdas, Unggul, Berdaya Saing dan Berakhlakul Karimah”</p>
+            
+            <ul class="list-style" style="text-align: left; margin-top: 20px;">
+                <li>Mewujudkan peningkatan mutu.</li>
+                <li>Membina pencapaian akhlak/budi pekerti luhur.</li>
+                <li>Mewujudkan personal yang sehat dan terampil beretos kerja.</li>
+                <li>Meningkatkan pelayanan/kerjasama secara optimal.</li>
+                <li>Meningkatkan budaya tertib dan budaya bersih.</li>
+                <li>Meningkatkan program diklat yang mengacu pada standar kompetensi dengan pendekatan Competency Based Training (CBT).</li>
+                <li>Peningkatan program keahlian.</li>
+                <li>Mengembangkan sistem pendidikan yang terintegrasi antara jalur pendidikan sekolah dan luar sekolah berwawasan mutu dan keunggulan, sesuai tuntutan kebutuhan pasar kerja.</li>
+                <li>Mengembangkan iklim belajar berwawasan global yang berakar pada norma dan nilai budaya bangsa indonesia.</li>
+                <li>Meningkatkan pendidikan / keterampilan guru.</li>
+            </ul>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-trophy"></i></div>
-            <div class="feature-title">Quiz & Peringkat</div>
-            <div class="feature-desc">Uji kemampuanmu dan raih peringkat tertinggi!</div>
-        </div>
+
+        <h4 style="color:#ff9800; margin-bottom:15px; font-size: 1.4rem;">MISI</h4>
+        <ul class="list-style">
+            <li>Meningkatkan sarana prasarana yang memadai untuk mendukung proses pembelajaran yang berkualitas.</li>
+            <li>Meningkatkan mutu pembelajaran dan pelatihan yang berbasis teknologi informasi yang berkarakter.</li>
+            <li>Meningkatkan kegiatan ekstrakurikuler agar peserta didik memiliki daya kreatifitas, kepribadian dan budi pekerti yang baik.</li>
+            <li>Meningkatkan jejaring kerja dengan dunia usaha dan industri/DUDI Nasional maupun Internasional.</li>
+            <li>Mewujudkan tamatan yang bertaqwa kepada Tuhan Yang Maha Esa berbudi luhur dan berakhlak mulia.</li>
+            <li>Meningkatkan sumber daya manusia dalam peningkatan mutu pendidikan.</li>
+        </ul>
+    </div>
+
+    <div class="cta-container">
+        <a href="login-firebase.html" class="btn-start">Mulai Belajar Sekarang 🚀</a>
     </div>
 
     <footer>

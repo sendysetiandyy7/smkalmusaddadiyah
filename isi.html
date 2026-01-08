@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Belajar - E-Learning</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL STYLE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #020024 0%, #090979 35%, #00d4ff 100%);
+            color: white;
+            height: 100vh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; }
+        .back-btn-nav { 
+            color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; transition: 0.3s;
+        }
+        .back-btn-nav:hover { background: white; color: #090979; }
+
+        /* --- KONTEN UTAMA --- */
+        .main-content {
+            flex: 1; padding: 30px 20px;
+            max-width: 1000px; margin: 0 auto; width: 100%;
+            overflow-y: auto;
+        }
+
+        .header-section { margin-bottom: 30px; }
+        .header-section h2 { font-size: 1.8rem; font-weight: 700; }
+        .progress-container {
+            width: 100%; background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin-top: 10px; overflow: hidden;
+        }
+        .progress-bar { height: 100%; background: #00ff88; width: 0%; transition: width 0.5s ease; }
+        .progress-text { font-size: 0.8rem; margin-top: 5px; color: #ccc; }
+
+        /* --- CARD MATERI --- */
+        .lesson-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px; padding: 20px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s;
+        }
+
+        .lesson-info h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .lesson-info p { font-size: 0.85rem; color: #ddd; }
+        .lesson-status { font-size: 0.8rem; padding: 3px 10px; border-radius: 5px; background: rgba(0,0,0,0.3); margin-left: 10px; }
+
+        .btn-action {
+            padding: 10px 25px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s;
+            background: white; color: #090979; text-decoration: none; display: inline-block;
+        }
+        .btn-action:hover { background: #00d4ff; color: white; }
+
+        /* Locked State */
+        .lesson-card.locked { opacity: 0.6; pointer-events: none; background: rgba(0,0,0,0.2); }
+        .lesson-card.locked .btn-action { background: #555; color: #888; }
+
+        /* Completed State */
+        .lesson-card.completed { border-color: #00ff88; background: rgba(0, 255, 136, 0.1); }
+        .lesson-card.completed .btn-action { background: #00ff88; color: #003366; cursor: default; }
+
+        /* --- FINAL EXAM CARD --- */
+        #finalExamCard { display: none; border: 2px solid gold; background: rgba(255, 215, 0, 0.1); animation: popIn 0.5s ease; flex-direction: column; text-align: center; gap: 20px; }
+        .final-actions { display: flex; gap: 10px; justify-content: center; width: 100%; }
+        
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* --- MODAL (FULLSCREEN) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 200;
+            display: none; flex-direction: column; overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .close-modal { font-size: 1.5rem; cursor: pointer; color: #ff4d4d; }
+
+        .modal-content {
+            padding: 30px; max-width: 900px; margin: 0 auto; width: 100%;
+        }
+
+        /* Video Area */
+        .video-wrapper {
+            width: 100%; padding-bottom: 56.25%; background: black; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; position: relative; height: 0; overflow: hidden;
+        }
+        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* Timer Bar */
+        .timer-bar-bg { width: 100%; height: 6px; background: #333; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+        .timer-bar-fill { height: 100%; width: 0%; background: #00d4ff; transition: width 1s linear; }
+        .timer-text { text-align: right; font-size: 0.9rem; color: #00d4ff; font-weight: bold; margin-bottom: 20px; }
+
+        /* Materi Text (Agar rapi saat diinject html asli) */
+        .text-content {
+            background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px; line-height: 1.8; margin-bottom: 30px; text-align: left;
+        }
+        /* Style bawaan untuk html materi yg diinject */
+        .text-content h3 { color: #00ff88; margin-top: 30px; margin-bottom: 15px; font-size: 1.4rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;}
+        .text-content p { margin-bottom: 15px; color: #e0e0e0; font-size: 1rem; text-align: justify; }
+        .text-content ul, .text-content ol { margin-left: 20px; margin-bottom: 20px; color: #ddd; }
+        .text-content li { margin-bottom: 10px; }
+        .text-content strong { color: white; font-weight: 600; }
+        .highlight-box { background: rgba(255, 215, 0, 0.1); border-left: 4px solid gold; padding: 15px; margin: 25px 0; border-radius: 5px; color: #fff; font-style: italic; }
+
+        /* Mini Quiz */
+        .mini-quiz-box {
+            display: none; background: rgba(0,0,0,0.3); border: 1px dashed #00ff88; padding: 25px; border-radius: 15px; animation: slideUp 0.5s ease;
+        }
+        .quiz-opt {
+            display: block; width: 100%; padding: 12px; margin-bottom: 8px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; border-radius: 8px; text-align: left; cursor: pointer; transition: 0.2s;
+        }
+        .quiz-opt:hover { background: rgba(255,255,255,0.2); }
+        .quiz-opt.selected { border-color: #00d4ff; background: rgba(0, 212, 255, 0.2); }
+        .quiz-opt.correct { background: #00c853; border-color: #00c853; color: white; }
+        .quiz-opt.wrong { background: #d50000; border-color: #d50000; }
+
+        .btn-submit-quiz {
+            width: 100%; padding: 15px; background: #00d4ff; color: #090979; font-weight: bold; border: none; border-radius: 50px; margin-top: 20px; cursor: pointer; font-size: 1rem;
+        }
+
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fas fa-graduation-cap"></i> E-Learning</div>
+       
+    </nav>
+
+    <main class="main-content">
+        
+        <div class="header-section">
+            <h2>Materi: Dampak Sosial Informatika</h2>
+            <div class="progress-text">Progres Belajar: <span id="progressPercent">0%</span></div>
+            <div class="progress-container"><div class="progress-bar" id="mainProgressBar"></div></div>
+        </div>
+
+        <div class="lesson-card" id="card1">
+            <div class="lesson-info">
+                <h3>1. Dampak Sosial Informatika (Dasar)</h3>
+                <p>Video H5P & Materi Lengkap • 3 Menit • 3 Soal Quiz</p>
+            </div>
+            <button class="btn-action" onclick="openLesson(1)">Mulai Belajar</button>
+        </div>
+
+        <div class="lesson-card locked" id="card2">
+            <div class="lesson-info">
+                <h3>2. Dampak Bagi Remaja (Gen Z) <span class="lesson-status">Terkunci</span></h3>
+                <p>Video H5P & Materi Lengkap • 3 Menit • 3 Soal Quiz</p>
+            </div>
+            <button class="btn-action">Terkunci 🔒</button>
+        </div>
+
+        <div class="lesson-card locked" id="card3">
+            <div class="lesson-info">
+                <h3>3. Digital Well-Being <span class="lesson-status">Terkunci</span></h3>
+                <p>Video H5P & Materi Lengkap • 3 Menit • 3 Soal Quiz</p>
+            </div>
+            <button class="btn-action">Terkunci 🔒</button>
+        </div>
+
+        <div class="lesson-card" id="finalExamCard">
+            <div class="lesson-info" style="width:100%">
+                <h3 style="color:gold; font-size: 1.5rem;">🎉 Materi Selesai!</h3>
+                <p>Silakan baca rangkuman materi sebelum mengerjakan evaluasi akhir.</p>
+                
+                <div class="final-actions" style="margin-top:20px;">
+                    <button class="btn-action" onclick="openSummary()">📖 Baca Rangkuman</button>
+                    <a href="quiz.html" class="btn-action locked-btn" id="btnEvaluasi" style="background: #333; color: #888; pointer-events: none;">📝 Mulai Evaluasi</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="learningModal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Judul Materi</h3>
+            <i class="fas fa-times close-modal" onclick="closeModalAttempt()"></i>
+        </div>
+        <div class="modal-content">
+            <div class="video-wrapper">
+                <iframe id="videoFrame" src="" allowfullscreen="allowfullscreen" allow="geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
+            </div>
+            
+            <div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar"></div></div>
+            <div class="timer-text" id="timerText">⏳ Wajib tonton & baca: 03:00</div>
+            
+            <div class="text-content" id="textContent"></div>
+            
+            <div id="lockedMessage" style="text-align:center; background:rgba(0,255,255,0.1); padding:10px; border-radius:10px; margin-bottom:20px;">
+                <i class="fa-solid fa-lock"></i> Kuis di bawah akan terbuka setelah 3 menit.
+            </div>
+            
+            <div class="mini-quiz-box" id="miniQuizBox">
+                <h3 style="color:#00ff88; margin-bottom:20px;">Mini Quiz</h3>
+                <div id="quizQuestions"></div>
+                <button class="btn-submit-quiz" onclick="checkQuiz()">Cek Jawaban & Selesaikan</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="summaryModal">
+        <div class="modal-header">
+            <h3>📑 Rangkuman Materi</h3>
+            <i class="fas fa-times close-modal" onclick="closeSummary()"></i>
+        </div>
+        <div class="modal-content">
+            <div class="text-content">
+                <h3 style="color:gold;">Rangkuman: Dampak Sosial Informatika</h3>
+                
+                <p><strong>Bab 1: Pengenalan</strong><br>
+                Informatika telah mengubah fundamental cara hidup manusia. Dampak positifnya meliputi kemudahan komunikasi tanpa batas, akses terhadap pendidikan melalui platform digital, dan munculnya peluang ekonomi baru. Namun, sisi negatifnya tidak bisa diabaikan, seperti penyebaran informasi palsu (hoaks), ancaman terhadap privasi data pribadi, dan kejahatan siber (cybercrime).</p>
+                
+                <p><strong>Bab 2: Perspektif Remaja (Gen Z)</strong><br>
+                Bagi generasi Z, teknologi adalah "oksigen". Media sosial menjadi panggung utama untuk ekspresi diri dan interaksi. Tantangan terbesar yang dihadapi adalah fenomena FOMO (Fear of Missing Out) yang dapat memicu kecemasan, serta pergeseran pola interaksi dari tatap muka menjadi virtual yang berpotensi mengurangi empati sosial.</p>
+                
+                <p><strong>Bab 3: Digital Well-Being</strong><br>
+                Kesejahteraan digital adalah kondisi keseimbangan yang sehat antara kehidupan online dan offline. Untuk mencapainya, diperlukan disiplin dalam mengatur screen time, melakukan detoks digital secara berkala, dan menerapkan etika berinternet (netiquette) yang baik untuk menjaga kesehatan mental.</p>
+                
+                <br>
+                <div style="background: rgba(255,215,0,0.1); border: 1px solid gold; padding: 15px; border-radius: 10px; text-align: center;">
+                    <strong>Sudah siap?</strong><br>
+                    Tutup rangkuman ini dan kerjakan Evaluasi Akhir untuk mendapatkan sertifikat.
+                </div>
+            </div>
+            <button class="btn-submit-quiz" onclick="closeSummaryAndUnlock()">Saya Sudah Membaca, Lanjut ke Evaluasi</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA MATERI LENGKAP & PANJANG ---
+        const lessons = {
+            1: {
+                title: "1. Dampak Sosial Informatika",
+                video: "https://app.lumi.education/run/FAflfL", 
+                text: `
+                    <div class="highlight-box">
+                        <strong>Pengantar:</strong> Teknologi Informatika (TI) kini menjadi tulang punggung kehidupan modern. Namun, seperti pisau bermata dua, ia membawa manfaat sekaligus tantangan baru bagi masyarakat.
+                    </div>
+
+                    <h3>A. Transformasi Kehidupan Sosial</h3>
+                    <p>Perkembangan teknologi informatika telah mengubah cara kita berinteraksi secara drastis. Jika dahulu komunikasi jarak jauh membutuhkan waktu berhari-hari melalui surat, kini pesan dapat terkirim dalam hitungan detik. Media sosial memungkinkan kita terhubung dengan ribuan orang sekaligus, menciptakan komunitas global tanpa batasan geografis.</p>
+
+                    <h3>B. Dampak Positif yang Signifikan</h3>
+                    <p>Manfaat teknologi informatika sangat luas dan menyentuh berbagai aspek kehidupan:</p>
+                    <ol>
+                        <li><strong>Revolusi Komunikasi:</strong> Aplikasi pesan instan dan panggilan video (seperti WhatsApp, Zoom) membuat jarak bukan lagi halangan untuk tetap terhubung dengan keluarga atau rekan kerja.</li>
+                        <li><strong>Demokratisasi Informasi & Pendidikan:</strong> Internet menyediakan akses tak terbatas ke sumber ilmu pengetahuan. Platform seperti YouTube, Coursera, dan Ruangguru memungkinkan siapa saja belajar hal baru kapan saja.</li>
+                        <li><strong>Pertumbuhan Ekonomi Digital:</strong> E-commerce dan layanan finansial digital (fintech) membuka peluang usaha baru bagi UMKM dan mempermudah transaksi jual beli bagi konsumen.</li>
+                        <li><strong>Inovasi Layanan Publik:</strong> Digitalisasi layanan pemerintah (e-government) meningkatkan transparansi dan efisiensi dalam pelayanan administrasi kependudukan hingga perpajakan.</li>
+                    </ol>
+
+                    <h3>C. Dampak Negatif yang Perlu Diwaspadai</h3>
+                    <p>Di balik kemudahannya, terdapat risiko yang harus dikelola dengan bijak:</p>
+                    <ol>
+                        <li><strong>Ketergantungan & Kecanduan:</strong> Penggunaan gadget yang berlebihan dapat mengganggu produktivitas, pola tidur, dan kesehatan fisik (seperti mata lelah dan masalah postur tubuh).</li>
+                        <li><strong>Erosi Privasi:</strong> Data pribadi yang kita bagikan secara online rentan disalahgunakan oleh pihak tidak bertanggung jawab untuk penipuan atau pencurian identitas.</li>
+                        <li><strong>Penyebaran Hoaks & Disinformasi:</strong> Kecepatan penyebaran informasi seringkali tidak dibarengi dengan verifikasi kebenaran, memicu kebingungan dan konflik di masyarakat.</li>
+                        <li><strong>Cyberbullying:</strong> Anonimitas di internet seringkali membuat orang merasa bebas melontarkan komentar jahat yang dapat merusak mental korban.</li>
+                    </ol>
+
+                    <h3>D. Menjadi Warga Digital yang Bijak</h3>
+                    <p>Penting bagi siswa untuk memiliki literasi digital yang baik. Ini berarti tidak hanya mampu menggunakan alat teknologi, tetapi juga mampu mengevaluasi informasi secara kritis, menjaga etika dalam berinteraksi, dan melindungi data pribadi sendiri maupun orang lain.</p>
+                `,
+                quiz: [
+                    { q: "Apa dampak positif utama informatika?", ops: ["Menyebarkan virus", "Mempermudah komunikasi", "Membuat malas"], a: 1 },
+                    { q: "Apa contoh dampak negatif?", ops: ["Hoaks & Cyberbullying", "Belajar online", "E-Commerce"], a: 0 },
+                    { q: "Sikap bijak dalam berteknologi adalah...", ops: ["Menyebar data pribadi", "Cek sumber informasi", "Spam komentar"], a: 1 }
+                ]
+            },
+            2: {
+                title: "2. Dampak Bagi Remaja (Gen Z)",
+                video: "https://app.lumi.education/run/FAflfL", 
+                text: `
+                    <div class="highlight-box">
+                        <strong>Fokus Pembahasan:</strong> Generasi Z adalah <em>digital native</em>, yang lahir dan tumbuh bersama internet. Bagaimana teknologi membentuk karakter dan kehidupan sosial mereka?
+                    </div>
+
+                    <h3>A. Teknologi sebagai Ruang Ekspresi</h3>
+                    <p>Bagi remaja, internet bukan sekadar alat, melainkan lingkungan hidup kedua. Media sosial menjadi panggung utama untuk menunjukkan identitas diri, bakat, dan kreativitas. Fenomena seperti 'Content Creator' atau 'Influencer' menunjukkan bagaimana teknologi memberdayakan remaja untuk berkarya dan bahkan mandiri secara finansial di usia muda.</p>
+
+                    <h3>B. Tantangan Psikologis: Fenomena FOMO</h3>
+                    <p>Salah satu dampak psikologis terbesar adalah <strong>FOMO (Fear of Missing Out)</strong>. Ini adalah perasaan cemas dan gelisah bahwa orang lain sedang mengalami kejadian seru yang tidak kita ikuti. FOMO dipicu oleh kebiasaan membandingkan kehidupan nyata diri sendiri dengan 'highlight reel' kehidupan orang lain yang tampak sempurna di media sosial. Hal ini dapat menurunkan rasa percaya diri dan kepuasan hidup.</p>
+
+                    <h3>C. Pergeseran Pola Interaksi Sosial</h3>
+                    <p>Teknologi telah mengubah dinamika pertemanan. Remaja kini mungkin lebih nyaman mengobrol melalui chat room atau game online daripada bertatap muka. Meskipun ini memperluas jaringan pertemanan, risiko yang muncul adalah berkurangnya kemampuan komunikasi non-verbal (seperti membaca ekspresi wajah dan nada suara) serta penurunan rasa empati dalam interaksi dunia nyata.</p>
+
+                    <h3>D. Jejak Digital dan Reputasi</h3>
+                    <p>Segala sesuatu yang diunggah ke internet—foto, status, komentar—menjadi jejak digital yang sulit dihapus. Remaja perlu menyadari bahwa jejak digital ini dapat mempengaruhi reputasi mereka di masa depan, misalnya saat melamar pekerjaan atau beasiswa. Penting untuk selalu "berpikir sebelum memposting" (Think before you post).</p>
+                `,
+                quiz: [
+                    { q: "Apa kepanjangan FOMO?", ops: ["Fear of Missing Out", "Fear of Money", "Fear of Monday"], a: 0 },
+                    { q: "Teknologi bagi remaja sebaiknya menjadi...", ops: ["Tempat pamer", "Ruang ekspresi diri", "Tempat bullying"], a: 1 },
+                    { q: "Salah satu dampak negatif di rumah adalah...", ops: ["Makan sehat", "Begadang scroll medsos", "Tidur tepat waktu"], a: 1 }
+                ]
+            },
+            3: {
+                title: "3. Digital Well-Being",
+                video: "https://app.lumi.education/run/FAflfL", 
+                text: `
+                    <div class="highlight-box">
+                        <strong>Konsep Utama:</strong> Digital Well-being (Kesejahteraan Digital) adalah keadaan di mana teknologi berfungsi untuk mendukung kesehatan mental, fisik, dan emosional kita, bukan sebaliknya.
+                    </div>
+
+                    <h3>A. Mengapa Digital Well-Being Penting?</h3>
+                    <p>Di tengah gempuran notifikasi dan aliran informasi tanpa henti, otak manusia rentan mengalami kelelahan kognitif. Penggunaan gadget yang tidak terkontrol dapat menyebabkan gangguan tidur (insomnia), stres, kecemasan, hingga depresi. Digital well-being bertujuan mengembalikan kendali manusia atas teknologi.</p>
+
+                    <h3>B. Strategi Penerapan Digital Well-Being</h3>
+                    <ol>
+                        <li><strong>Manajemen Waktu Layar (Screen Time):</strong> Gunakan fitur bawaan di smartphone untuk memantau durasi penggunaan aplikasi. Tetapkan batasan harian untuk media sosial dan hiburan.</li>
+                        <li><strong>Digital Detox:</strong> Alokasikan waktu khusus bebas gadget, misalnya saat makan malam bersama keluarga, atau satu jam sebelum tidur. Ini membantu otak untuk rileks dan meningkatkan kualitas hubungan sosial.</li>
+                        <li><strong>Mode Fokus (Do Not Disturb):</strong> Matikan notifikasi yang tidak penting saat sedang belajar atau bekerja. Gangguan notifikasi dapat memecah konsentrasi dan menurunkan produktivitas secara signifikan.</li>
+                    </ol>
+
+                    <h3>C. Etika dan Keamanan Berinternet</h3>
+                    <p>Kesejahteraan digital juga mencakup rasa aman dan nyaman saat online. Hal ini dapat dicapai dengan:</p>
+                    <ul>
+                        <li><strong>Menjaga Etika (Netiquette):</strong> Berkomunikasi dengan sopan, menghargai pendapat orang lain, dan tidak menyebarkan kebencian.</li>
+                        <li><strong>Keamanan Privasi:</strong> Menggunakan password yang kuat, mengaktifkan autentikasi dua faktor (2FA), dan berhati-hati saat membagikan lokasi atau data pribadi.</li>
+                    </ul>
+
+                    <h3>D. Kesimpulan</h3>
+                    <p>Teknologi adalah alat yang luar biasa jika digunakan dengan benar. Kuncinya adalah kesadaran diri (self-awareness) dan disiplin diri untuk menjadikan teknologi sebagai pelayan yang baik, bukan tuan yang mendikte hidup kita.</p>
+                `,
+                quiz: [
+                    { q: "Apa itu Digital Break?", ops: ["Main game sepuasnya", "Istirahat dari layar", "Beli HP baru"], a: 1 },
+                    { q: "Saat belajar sebaiknya mengaktifkan...", ops: ["Mode Fokus", "Mode Pesawat", "Musik Keras"], a: 0 },
+                    { q: "Menjaga etika digital berarti...", ops: ["Berkomentar kasar", "Sopan santun", "Menyebar hoaks"], a: 1 }
+                ]
+            }
+        };
+
+        // --- KONFIGURASI TIMER ---
+        const REQUIRED_TIME_SEC = 180; // 3 Menit
+        
+        let currentLesson = 0;
+        let timerInterval;
+        let timeElapsed = 0;
+        let isLessonComplete = [false, false, false];
+
+        function openLesson(id) {
+            currentLesson = id;
+            const data = lessons[id];
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('videoFrame').src = data.video;
+            document.getElementById('textContent').innerHTML = data.text;
+            document.getElementById('learningModal').style.display = 'flex';
+            document.getElementById('miniQuizBox').style.display = 'none';
+            document.getElementById('lockedMessage').style.display = 'block';
+            document.getElementById('timerBar').style.width = '0%';
+            
+            const quizContainer = document.getElementById('quizQuestions');
+            quizContainer.innerHTML = "";
+            data.quiz.forEach((item, index) => {
+                let html = `<div class="quiz-q">${index+1}. ${item.q}</div>`;
+                item.ops.forEach((op, i) => {
+                    html += `<div class="quiz-opt" onclick="selectOpt(this, ${index}, ${i})">${op}</div>`;
+                });
+                quizContainer.innerHTML += `<div style="margin-bottom:20px;">${html}</div>`;
+            });
+            startTimer();
+        }
+
+        function startTimer() {
+            timeElapsed = 0;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeElapsed++;
+                let percent = (timeElapsed / REQUIRED_TIME_SEC) * 100;
+                if(percent > 100) percent = 100;
+                document.getElementById('timerBar').style.width = percent + "%";
+                let min = Math.floor((REQUIRED_TIME_SEC - timeElapsed) / 60);
+                let sec = (REQUIRED_TIME_SEC - timeElapsed) % 60;
+                document.getElementById('timerText').innerText = (timeElapsed >= REQUIRED_TIME_SEC) ? "✅ Waktu terpenuhi." : `⏳ Wajib tonton & baca: 0${min}:${sec < 10 ? '0'+sec : sec}`;
+                
+                if (timeElapsed >= REQUIRED_TIME_SEC) {
+                    clearInterval(timerInterval);
+                    document.getElementById('miniQuizBox').style.display = 'block';
+                    document.getElementById('lockedMessage').style.display = 'none';
+                    document.getElementById('miniQuizBox').scrollIntoView({behavior: "smooth"});
+                }
+            }, 1000);
+        }
+
+        let userAnswers = {};
+        function selectOpt(el, qIndex, ansIndex) {
+            let parent = el.parentNode;
+            parent.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            userAnswers[qIndex] = ansIndex;
+        }
+
+        function checkQuiz() {
+            const data = lessons[currentLesson];
+            let correctCount = 0;
+            let allAnswered = true;
+            const quizDivs = document.getElementById('quizQuestions').children;
+            
+            for(let i=0; i<data.quiz.length; i++) {
+                if (userAnswers[i] === undefined) { allAnswered = false; break; }
+                let opts = quizDivs[i].querySelectorAll('.quiz-opt');
+                opts.forEach((opt, idx) => {
+                    opt.onclick = null; 
+                    if(idx === data.quiz[i].a) opt.classList.add('correct');
+                    else if(idx === userAnswers[i]) opt.classList.add('wrong');
+                });
+                if (userAnswers[i] === data.quiz[i].a) correctCount++;
+            }
+
+            if (!allAnswered) { alert("Jawab semua soal dulu!"); return; }
+
+            if (correctCount === data.quiz.length) {
+                alert("Selamat! Jawaban sempurna.");
+                completeLesson(currentLesson);
+            } else {
+                alert("Ada jawaban salah. Silakan ulangi.");
+                setTimeout(() => closeModalAttempt(), 1000);
+            }
+        }
+
+        function completeLesson(id) {
+            isLessonComplete[id-1] = true;
+            const card = document.getElementById('card'+id);
+            card.classList.add('completed');
+            card.querySelector('button').innerText = "Selesai ✅";
+            card.querySelector('button').onclick = null;
+
+            if (id < 3) {
+                const nextId = id + 1;
+                const nextCard = document.getElementById('card'+nextId);
+                nextCard.classList.remove('locked');
+                nextCard.querySelector('.lesson-status').innerText = "Terbuka";
+                nextCard.querySelector('button').innerText = "Mulai Belajar";
+                nextCard.querySelector('button').onclick = function() { openLesson(nextId); };
+            }
+
+            const progress = (isLessonComplete.filter(Boolean).length / 3) * 100;
+            document.getElementById('mainProgressBar').style.width = progress + "%";
+            document.getElementById('progressPercent').innerText = Math.round(progress) + "%";
+
+            if (isLessonComplete.every(Boolean)) {
+                document.getElementById('finalExamCard').style.display = 'flex';
+            }
+            document.getElementById('learningModal').style.display = 'none';
+            document.getElementById('videoFrame').src = "";
+        }
+
+        function closeModalAttempt() {
+            if (timeElapsed < REQUIRED_TIME_SEC && !isLessonComplete[currentLesson-1]) {
+                if(!confirm("Waktu belum habis. Yakin keluar?")) return;
+            }
+            document.getElementById('learningModal').style.display = 'none';
+            document.getElementById('videoFrame').src = "";
+            clearInterval(timerInterval);
+            userAnswers = {};
+        }
+
+        // --- RANGKUMAN & UNLOCK EVALUASI ---
+        function openSummary() {
+            document.getElementById('summaryModal').style.display = 'flex';
+        }
+        function closeSummary() {
+            document.getElementById('summaryModal').style.display = 'none';
+        }
+        function closeSummaryAndUnlock() {
+            closeSummary();
+            const btn = document.getElementById('btnEvaluasi');
+            btn.style.background = "gold";
+            btn.style.color = "black";
+            btn.style.pointerEvents = "auto";
+            btn.innerText = "📝 Mulai Evaluasi Sekarang";
+        }
+    </script>
+
+</body>
+</html>
