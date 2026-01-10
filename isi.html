@@ -29,7 +29,9 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: sticky; top: 0; z-index: 100;
         }
-        .logo { font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; }
+        .logo { font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+        .logo i { font-size: 1.5rem; color: #00d4ff; }
+
         .back-btn-nav { 
             color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem;
             border: 1px solid rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; transition: 0.3s;
@@ -149,12 +151,11 @@
 <body>
 
     <nav>
-         <div class="logo"><i class="fas fa-graduation-cap"></i> E-Learning SMK</div>
-        
+        <div class="logo"><i class="fas fa-graduation-cap"></i> E-Learning SMK</div>
+        <a href="pilihkelas.html" class="back-btn-nav"><i class="fas fa-arrow-left"></i> Dashboard</a>
     </nav>
 
     <main class="main-content">
-        
         <div class="header-section">
             <h2>Materi: Dampak Sosial Informatika</h2>
             <div class="progress-text">Progres Belajar: <span id="progressPercent">0%</span></div>
@@ -189,14 +190,12 @@
             <div class="lesson-info" style="width:100%">
                 <h3 style="color:gold; font-size: 1.5rem;">🎉 Materi Selesai!</h3>
                 <p>Silakan baca rangkuman materi sebelum mengerjakan evaluasi akhir.</p>
-                
                 <div class="final-actions" style="margin-top:20px;">
                     <button class="btn-action" onclick="openSummary()">📖 Baca Rangkuman</button>
                     <a href="quiz.html" class="btn-action locked-btn" id="btnEvaluasi" style="background: #333; color: #888; pointer-events: none;">📝 Mulai Evaluasi</a>
                 </div>
             </div>
         </div>
-
     </main>
 
     <div class="modal-overlay" id="learningModal">
@@ -208,7 +207,6 @@
             <div class="video-wrapper">
                 <iframe id="videoFrame" src="" allowfullscreen="allowfullscreen" allow="geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
             </div>
-            
             <div class="timer-bar-bg"><div class="timer-bar-fill" id="timerBar"></div></div>
             <div class="timer-text" id="timerText">⏳ Wajib tonton & baca: 03:00</div>
             
@@ -217,7 +215,6 @@
             <div id="lockedMessage" style="text-align:center; background:rgba(0,255,255,0.1); padding:10px; border-radius:10px; margin-bottom:20px;">
                 <i class="fa-solid fa-lock"></i> Kuis di bawah akan terbuka setelah 3 menit.
             </div>
-            
             <div class="mini-quiz-box" id="miniQuizBox">
                 <h3 style="color:#00ff88; margin-bottom:20px;">Mini Quiz</h3>
                 <div id="quizQuestions"></div>
@@ -234,60 +231,83 @@
         <div class="modal-content">
             <div class="text-content">
                 <h3 style="color:gold;">Rangkuman: Dampak Sosial Informatika</h3>
+                <div class="highlight-box"><strong>Penting Diingat:</strong> Rangkuman ini adalah intisari dari 3 bab yang telah Anda pelajari.</div>
                 
-                <div class="highlight-box">
-                    <strong>Penting Diingat:</strong> Rangkuman ini adalah intisari dari 3 bab yang telah Anda pelajari. Baca dengan seksama karena soal evaluasi akan diambil dari poin-poin berikut.
-                </div>
-
                 <h3 style="color:#00d4ff">Bab 1: Pengenalan Dampak Sosial Informatika</h3>
-                <p>
-                    Teknologi informatika telah menjadi bagian tak terpisahkan dari kehidupan. Dampaknya terbagi menjadi dua sisi mata uang:
-                </p>
-                <ul>
-                    <li><strong>Dampak Positif:</strong> Mempercepat komunikasi jarak jauh, membuka akses pendidikan (e-learning), menciptakan lapangan kerja baru (ekonomi digital), dan mempermudah layanan publik (e-government).</li>
-                    <li><strong>Dampak Negatif:</strong> Risiko kecanduan gadget, penurunan kualitas interaksi sosial tatap muka, penyebaran berita bohong (hoaks), dan ancaman kejahatan siber (seperti pencurian data pribadi dan peretasan).</li>
-                </ul>
-                <p>
-                    Kunci utama menghadapi era ini adalah <strong>Literasi Digital</strong>, yaitu kemampuan untuk menggunakan teknologi secara cerdas, kritis, dan bertanggung jawab.
-                </p>
-
+                <p>Teknologi informatika telah menjadi bagian tak terpisahkan dari kehidupan. Dampaknya terbagi menjadi dua sisi mata uang: Positif (komunikasi cepat, e-learning) dan Negatif (kecanduan, hoaks).</p>
+                
                 <h3 style="color:#00d4ff">Bab 2: Perspektif Remaja (Gen Z)</h3>
-                <p>
-                    Generasi Z tumbuh bersamaan dengan perkembangan internet. Bagi remaja, teknologi bukan sekadar alat, tapi lingkungan hidup kedua.
-                </p>
-                <ul>
-                    <li><strong>Media Ekspresi:</strong> Media sosial menjadi tempat utama untuk menunjukkan identitas dan kreativitas.</li>
-                    <li><strong>Fenomena FOMO (Fear of Missing Out):</strong> Rasa cemas berlebihan karena takut tertinggal tren atau informasi terbaru, yang sering memicu stres dan rasa rendah diri karena membandingkan hidup dengan orang lain di medsos.</li>
-                    <li><strong>Jejak Digital:</strong> Segala aktivitas online meninggalkan jejak yang sulit dihapus dan bisa mempengaruhi reputasi di masa depan (seperti saat melamar kerja).</li>
-                </ul>
-
-                <h3 style="color:#00d4ff">Bab 3: Digital Well-Being (Kesejahteraan Digital)</h3>
-                <p>
-                    Digital Well-being adalah kondisi di mana teknologi mendukung kesehatan mental dan fisik, bukan merusaknya.
-                </p>
-                <ul>
-                    <li><strong>Strategi Sehat:</strong> 
-                        <ol>
-                            <li><em>Screen Time Management:</em> Membatasi waktu layar agar tidak mengganggu tidur dan aktivitas fisik.</li>
-                            <li><em>Digital Detox:</em> Puasa gadget sejenak untuk memulihkan fokus dan hubungan sosial.</li>
-                            <li><em>Mode Fokus:</em> Mematikan notifikasi saat belajar/bekerja.</li>
-                        </ol>
-                    </li>
-                    <li><strong>Netiquette (Etika Internet):</strong> Berperilaku sopan di dunia maya sama pentingnya dengan di dunia nyata. Hindari cyberbullying dan ujaran kebencian.</li>
-                </ul>
+                <p>Bagi generasi Z, teknologi adalah "oksigen". Fenomena <strong>FOMO (Fear of Missing Out)</strong> sering terjadi, yaitu rasa cemas takut tertinggal tren.</p>
+                
+                <h3 style="color:#00d4ff">Bab 3: Digital Well-Being</h3>
+                <p>Digital Well-being adalah kondisi di mana teknologi mendukung kesehatan mental. Strategi penting: Screen Time Management dan Digital Detox.</p>
                 
                 <br>
                 <div style="background: rgba(255,215,0,0.1); border: 1px solid gold; padding: 20px; border-radius: 10px; text-align: center;">
                     <strong style="font-size:1.1rem">Sudah Siap Evaluasi?</strong><br><br>
-                    Tutup rangkuman ini dan klik tombol <strong>"Mulai Evaluasi"</strong> untuk menguji pemahaman Anda dan mendapatkan sertifikat kelulusan.
+                    Tutup rangkuman ini dan klik tombol <strong>"Mulai Evaluasi"</strong> untuk menguji pemahaman Anda.
                 </div>
             </div>
             <button class="btn-submit-quiz" onclick="closeSummaryAndUnlock()">Saya Sudah Membaca & Siap Evaluasi</button>
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvlai-CR39S_Z2s4rUhJcVX2Di3IgDZYg",
+            authDomain: "websmk-saya.firebaseapp.com",
+            projectId: "websmk-saya",
+            storageBucket: "websmk-saya.firebasestorage.app",
+            messagingSenderId: "89778838386",
+            appId: "1:89778838386:web:6339ca30d13bc57aa05beb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- FUNGSI SIMPAN PROGRES ---
+        window.simpanProgresMateri = async function(lessonId) {
+            // 1. Cek Nama di Memori
+            let namaSiswa = localStorage.getItem('namaSiswa');
+
+            // 2. JIKA NAMA KOSONG/DEFAULT, TANYA LANGSUNG KE SISWA
+            if (!namaSiswa || namaSiswa === "Siswa" || namaSiswa === "Sang Juara") {
+                namaSiswa = prompt("Selamat kamu lulus materi ini! \nSilakan ketik Nama Lengkapmu untuk laporan ke Guru:", "");
+                
+                // Jika siswa mengisi nama, simpan ke memori agar nanti tidak ditanya lagi
+                if (namaSiswa && namaSiswa.trim() !== "") {
+                    localStorage.setItem('namaSiswa', namaSiswa);
+                } else {
+                    namaSiswa = "Siswa Tanpa Nama"; // Kalau dicancel
+                }
+            }
+
+            const kelas = localStorage.getItem('siswaKelas') || "X";
+            const mapel = localStorage.getItem('siswaMapel') || "Umum";
+            
+            try {
+                await addDoc(collection(db, "leaderboard"), {
+                    nama: namaSiswa,
+                    kelas: kelas,   
+                    mapel: mapel,   
+                    nilai: 100, // Nilai default 100 jika lulus materi
+                    keterangan: `Tuntas Materi ${lessonId}`,
+                    waktu: serverTimestamp()
+                });
+                console.log(`Progres Materi ${lessonId} tersimpan untuk ${namaSiswa}.`);
+            } catch (e) {
+                console.error("Gagal simpan progres: ", e);
+                alert("Gagal menyimpan data ke server. Cek koneksi internet.");
+            }
+        }
+    </script>
+
     <script>
-        // --- DATA MATERI LENGKAP & PANJANG ---
+        // --- DATA MATERI LENGKAP DAN PANJANG ---
         const lessons = {
             1: {
                 title: "1. Dampak Sosial Informatika",
@@ -329,7 +349,7 @@
             },
             2: {
                 title: "2. Dampak Bagi Remaja (Gen Z)",
-                video: "https://app.lumi.education/run/sbDVSw", // UPDATED VIDEO HERE
+                video: "https://app.lumi.education/run/sbDVSw", 
                 text: `
                     <div class="highlight-box">
                         <strong>Fokus Pembahasan:</strong> Generasi Z adalah <em>digital native</em>, yang lahir dan tumbuh bersama internet. Bagaimana teknologi membentuk karakter dan kehidupan sosial mereka?
@@ -389,9 +409,7 @@
             }
         };
 
-        // --- KONFIGURASI TIMER ---
-        const REQUIRED_TIME_SEC = 180; // 3 Menit
-        
+        const REQUIRED_TIME_SEC = 180; 
         let currentLesson = 0;
         let timerInterval;
         let timeElapsed = 0;
@@ -412,9 +430,7 @@
             quizContainer.innerHTML = "";
             data.quiz.forEach((item, index) => {
                 let html = `<div class="quiz-q">${index+1}. ${item.q}</div>`;
-                item.ops.forEach((op, i) => {
-                    html += `<div class="quiz-opt" onclick="selectOpt(this, ${index}, ${i})">${op}</div>`;
-                });
+                item.ops.forEach((op, i) => { html += `<div class="quiz-opt" onclick="selectOpt(this, ${index}, ${i})">${op}</div>`; });
                 quizContainer.innerHTML += `<div style="margin-bottom:20px;">${html}</div>`;
             });
             startTimer();
@@ -431,7 +447,6 @@
                 let min = Math.floor((REQUIRED_TIME_SEC - timeElapsed) / 60);
                 let sec = (REQUIRED_TIME_SEC - timeElapsed) % 60;
                 document.getElementById('timerText').innerText = (timeElapsed >= REQUIRED_TIME_SEC) ? "✅ Waktu terpenuhi." : `⏳ Wajib tonton & baca: 0${min}:${sec < 10 ? '0'+sec : sec}`;
-                
                 if (timeElapsed >= REQUIRED_TIME_SEC) {
                     clearInterval(timerInterval);
                     document.getElementById('miniQuizBox').style.display = 'block';
@@ -470,6 +485,10 @@
 
             if (correctCount === data.quiz.length) {
                 alert("Selamat! Jawaban sempurna.");
+                
+                // Simpan Progres (Akan memanggil fungsi Firebase di atas)
+                if(window.simpanProgresMateri) window.simpanProgresMateri(currentLesson);
+                
                 completeLesson(currentLesson);
             } else {
                 alert("Ada jawaban salah. Silakan ulangi.");
@@ -514,13 +533,8 @@
             userAnswers = {};
         }
 
-        // --- RANGKUMAN & UNLOCK EVALUASI ---
-        function openSummary() {
-            document.getElementById('summaryModal').style.display = 'flex';
-        }
-        function closeSummary() {
-            document.getElementById('summaryModal').style.display = 'none';
-        }
+        function openSummary() { document.getElementById('summaryModal').style.display = 'flex'; }
+        function closeSummary() { document.getElementById('summaryModal').style.display = 'none'; }
         function closeSummaryAndUnlock() {
             closeSummary();
             const btn = document.getElementById('btnEvaluasi');
@@ -530,6 +544,5 @@
             btn.innerText = "📝 Mulai Evaluasi Sekarang";
         }
     </script>
-
 </body>
 </html>

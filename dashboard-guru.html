@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Guru - E-Learning</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL STYLE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #020024 0%, #090979 35%, #00d4ff 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: 1px; color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: gold; }
+        
+        .logout-btn {
+            font-size: 0.9rem; color: #ff4b2b; background: white;
+            text-decoration: none; cursor: pointer; transition: 0.3s;
+            padding: 8px 20px; border-radius: 20px; font-weight: 600;
+        }
+        .logout-btn:hover { background: #ffebee; }
+
+        /* --- CONTENT --- */
+        .main-content {
+            flex: 1; padding: 40px 20px;
+            max-width: 1200px; margin: 0 auto; width: 100%;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .header-title { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
+        .header-title h1 { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
+        .header-title p { color: #ccc; margin: 0; }
+
+        /* FILTER BAR */
+        .filter-container {
+            display: flex; gap: 10px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; flex-wrap: wrap;
+        }
+        .filter-select {
+            padding: 10px; border-radius: 8px; border: none; outline: none; background: white; color: #333; font-weight: 600; cursor: pointer; min-width: 120px;
+        }
+
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+        /* CARD STYLE */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .card h3 { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 20px; color: gold; }
+
+        /* TABLE STYLE */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #00d4ff; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
+        tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .score-badge { background: #00c853; padding: 5px 10px; border-radius: 15px; font-size: 0.85rem; font-weight: 600; }
+        .low-score { background: #ff4b2b; }
+        .materi-badge { background: rgba(0, 212, 255, 0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; }
+        .exam-badge { color: gold; font-weight: bold; letter-spacing: 0.5px; }
+        
+        /* Badge Kelas & Mapel */
+        .info-badge { background: #fff; color: #333; font-weight: bold; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; display: inline-block; margin-right: 5px;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fas fa-chalkboard-user"></i> Panel Guru</div>
+        <div onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</div>
+    </nav>
+
+    <main class="main-content">
+        
+        <div class="header-title">
+            <div>
+                <h1>Data Nilai Siswa</h1>
+                <p>Pantau perkembangan siswa berdasarkan kelas, mapel, dan aktivitas.</p>
+            </div>
+            
+            <div class="filter-container">
+                <select id="filterKelas" class="filter-select" onchange="applyFilter()">
+                    <option value="all">Semua Kelas</option>
+                    <option value="X">Kelas X</option>
+                    <option value="XI">Kelas XI</option>
+                    <option value="XII">Kelas XII</option>
+                </select>
+
+                <select id="filterMapel" class="filter-select" onchange="applyFilter()">
+                    <option value="all">Semua Mapel</option>
+                    <option value="Informatika">Informatika</option>
+                    <option value="B. Indo">B. Indo</option>
+                    <option value="Matematika">Matematika</option>
+                    <option value="IPAS">IPAS</option>
+                </select>
+                
+                <select id="filterJenis" class="filter-select" onchange="applyFilter()">
+                    <option value="all">Semua Aktivitas</option>
+                    <option value="Evaluasi">Evaluasi Akhir</option>
+                    <option value="Materi">Progres Materi</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3><i class="fas fa-table"></i> Tabel Rekapitulasi</h3>
+                <div class="table-container">
+                    <table id="nilaiTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th>Mapel</th>
+                                <th>Keterangan</th>
+                                <th>Nilai</th>
+                                <th>Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;">⏳ Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="dataCount" style="margin-top:15px; font-size:0.9rem; color:#ccc;">Menampilkan 0 data</div>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvlai-CR39S_Z2s4rUhJcVX2Di3IgDZYg",
+            authDomain: "websmk-saya.firebaseapp.com",
+            projectId: "websmk-saya",
+            storageBucket: "websmk-saya.firebasestorage.app",
+            messagingSenderId: "89778838386",
+            appId: "1:89778838386:web:6339ca30d13bc57aa05beb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let allStudentData = []; // Menyimpan data mentah untuk difilter
+
+        async function loadStudentData() {
+            const tableBody = document.getElementById('tableBody');
+            
+            // Ambil 100 data terbaru
+            const q = query(collection(db, "leaderboard"), orderBy("waktu", "desc"), limit(100));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                allStudentData = []; // Reset array
+
+                if (querySnapshot.empty) {
+                    tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>Belum ada data.</td></tr>";
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    allStudentData.push(doc.data());
+                });
+
+                // Tampilkan data setelah diambil
+                renderTable(allStudentData);
+
+            } catch (e) {
+                console.error("Error:", e);
+                tableBody.innerHTML = `<tr><td colspan='7' style="color:#ff4b2b">Gagal memuat data: ${e.message}</td></tr>`;
+            }
+        }
+
+        // --- FUNGSI FILTERING ---
+        window.applyFilter = function() {
+            const kelasFilter = document.getElementById('filterKelas').value;
+            const mapelFilter = document.getElementById('filterMapel').value; // Ambil nilai Mapel
+            const jenisFilter = document.getElementById('filterJenis').value;
+
+            const filteredData = allStudentData.filter(item => {
+                // 1. Filter Kelas (Default 'X' jika data lama tidak ada field kelas)
+                const itemKelas = item.kelas || "X"; 
+                const matchKelas = (kelasFilter === "all") || (itemKelas === kelasFilter);
+
+                // 2. Filter Mapel (Default 'Informatika' jika data lama tidak ada field mapel)
+                const itemMapel = item.mapel || "Informatika";
+                const matchMapel = (mapelFilter === "all") || (itemMapel === mapelFilter);
+
+                // 3. Filter Jenis (Evaluasi / Materi)
+                const itemKet = item.keterangan || "Evaluasi";
+                let matchJenis = true;
+                if (jenisFilter === "Evaluasi") matchJenis = !itemKet.includes("Materi");
+                if (jenisFilter === "Materi") matchJenis = itemKet.includes("Materi");
+
+                return matchKelas && matchMapel && matchJenis;
+            });
+
+            renderTable(filteredData);
+        }
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('tableBody');
+            const dataCount = document.getElementById('dataCount');
+            
+            tableBody.innerHTML = "";
+            let nomor = 1;
+
+            if(data.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding:20px;'>Data tidak ditemukan untuk filter ini.</td></tr>";
+                dataCount.innerText = "Menampilkan 0 data";
+                return;
+            }
+
+            data.forEach((item) => {
+                // Format Waktu
+                let waktuStr = "-";
+                if(item.waktu) {
+                    const date = item.waktu.toDate();
+                    waktuStr = date.toLocaleDateString('id-ID', {day: 'numeric', month: 'short'}) + " " + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+
+                // Keterangan Label
+                let ket = item.keterangan || "Evaluasi Akhir";
+                let displayKet = ket.includes("Materi") 
+                    ? `<span class="materi-badge">${ket}</span>` 
+                    : `<span class="exam-badge">🏆 ${ket}</span>`;
+
+                // Badge Nilai
+                let nilaiBadge = item.nilai >= 70 
+                    ? `<span class="score-badge">${item.nilai} (Lulus)</span>` 
+                    : `<span class="score-badge low-score">${item.nilai} (Remed)</span>`;
+                
+                // Kelas & Mapel Display
+                let kelasDisplay = item.kelas ? `<span class="info-badge">${item.kelas}</span>` : "-";
+                let mapelDisplay = item.mapel ? `<span class="info-badge">${item.mapel}</span>` : "Informatika";
+
+                let row = `
+                    <tr>
+                        <td>${nomor}</td>
+                        <td style="font-weight:bold;">${item.nama}</td>
+                        <td>${kelasDisplay}</td>
+                        <td>${mapelDisplay}</td>
+                        <td>${displayKet}</td>
+                        <td>${nilaiBadge}</td>
+                        <td style="font-size:0.85rem; opacity:0.8;">${waktuStr}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+                nomor++;
+            });
+
+            dataCount.innerText = `Menampilkan ${data.length} data`;
+        }
+
+        // Jalankan saat load
+        loadStudentData();
+
+        window.logout = function() {
+            if(confirm("Keluar dari Panel Guru?")) window.location.href = "login-firebase.html";
+        }
+    </script>
+
+</body>
+</html>

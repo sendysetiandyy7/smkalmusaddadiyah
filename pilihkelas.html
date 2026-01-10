@@ -29,7 +29,12 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: sticky; top: 0; z-index: 100;
         }
-        .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: 1px; color: white; text-decoration: none; }
+        
+        .logo { 
+            font-weight: 700; font-size: 1.4rem; letter-spacing: 1px; color: white; text-decoration: none; 
+            display: flex; align-items: center; gap: 10px; 
+        }
+        .logo i { font-size: 1.6rem; color: #00d4ff; }
         
         .logout-btn {
             font-size: 0.9rem; color: rgba(255,255,255,0.7); 
@@ -118,8 +123,10 @@
 <body>
 
     <nav>
-        <div class="logo"><i class="fas fa-graduation-cap"></i> E-Learning SMK</div>
-        
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i> E-Learning SMK
+        </div>
+        <div onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</div>
     </nav>
 
     <main class="main-content">
@@ -196,19 +203,13 @@
             else if (hour >= 15 && hour < 18) greeting = "Selamat Sore";
             else greeting = "Selamat Malam";
 
-            // Ambil nama dari penyimpanan, default "Sang Juara" jika kosong
             const storedName = localStorage.getItem('namaSiswa') || 'Sang Juara';
-            
-            // Update teks di HTML
             const headerElement = document.getElementById('sapaanHeader');
             headerElement.innerHTML = `${greeting}, <span class="highlight-name">${storedName}</span>! 👋`;
         }
-
-        // Jalankan fungsi saat halaman dimuat
         updateGreeting();
 
-
-        // --- 2. LOGIKA SELEKSI KELAS (Sama seperti sebelumnya) ---
+        // --- 2. LOGIKA SELEKSI KELAS ---
         let selections = { kelas: null, semester: null, mapel: null, pertemuan: null };
 
         function selectItem(element, category, value) {
@@ -227,6 +228,10 @@
             if (!selections.semester) { alert("Harap pilih SEMESTER terlebih dahulu!"); window.location.hash = "#card-semester"; return; }
             if (!selections.mapel) { alert("Harap pilih MATA PELAJARAN terlebih dahulu!"); window.location.hash = "#card-mapel"; return; }
             if (!selections.pertemuan) { alert("Harap pilih PERTEMUAN terlebih dahulu!"); window.location.hash = "#card-pertemuan"; return; }
+
+            // SIMPAN PILIHAN KE MEMORI AGAR BISA DIAMBIL SAAT KUIS
+            localStorage.setItem('siswaKelas', selections.kelas);
+            localStorage.setItem('siswaMapel', selections.mapel);
 
             window.location.href = "isi.html"; 
         }
