@@ -22,7 +22,6 @@
             overflow: hidden;
         }
 
-        /* Hiasan Background */
         .circle {
             position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.6;
         }
@@ -172,7 +171,7 @@
                 });
         });
 
-        // --- PROSES LOGIN (DENGAN PROTEKSI GURU) ---
+        // --- PROSES LOGIN (VALIDASI PERAN LENGKAP) ---
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -182,14 +181,20 @@
             // Ambil Pilihan Role
             const role = document.querySelector('input[name="role"]:checked').value;
 
-            // --- [FITUR KEAMANAN] ---
-            // Hanya email 'guru@smk.id' yang boleh masuk sebagai Guru.
-            // Siswa biasa akan ditolak jika pilih 'Guru'
+            // --- VALIDASI AWAL SEBELUM KE FIREBASE ---
+            
+            // 1. Jika pilih GURU tapi email BUKAN guru -> TOLAK
             if (role === 'guru' && email !== 'guru@smk.id') {
-                alert("⛔ AKSES DITOLAK!\n\nEmail ini tidak terdaftar sebagai Guru. Silakan login sebagai Siswa.");
-                return; // Stop proses login
+                alert("⛔ AKSES DITOLAK!\nEmail ini tidak terdaftar sebagai Guru. Silakan login sebagai Siswa.");
+                return;
             }
-            // ------------------------
+
+            // 2. Jika pilih SISWA tapi email ADALAH guru -> TOLAK
+            if (role === 'siswa' && email === 'guru@smk.id') {
+                alert("⚠️ AKUN GURU TERDETEKSI!\nSilakan pilih opsi 'Guru' untuk masuk ke Dashboard Guru.");
+                return;
+            }
+            // ------------------------------------------
 
             msgLog.style.color = '#00d4ff'; msgLog.innerText = '⏳ Sedang masuk...'; btn.disabled = true; btn.innerText = 'Memproses...';
 
